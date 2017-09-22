@@ -28,26 +28,30 @@ class Thumbnail {
         }
 
         imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0, $desired_width, $desired_height, $width, $height);
-        //imagejpeg($virtual_image, $dest);
-        $this->imageSave($virtual_image, $dest, $type);
 
-        return true;
+        $img_saved = $this->imageSave($virtual_image, $dest, $type);
+
+        imagedestroy($virtual_image);
+
+        return $img_saved;
     }
 
     private function imageSave($virtual_image, $dest, $type) {
         switch ($type) {
             case IMAGETYPE_GIF :
-                imagegif($virtual_image, $dest);
+                $img_saved = imagegif($virtual_image, $dest);
                 break;
             case IMAGETYPE_JPEG :
-                imagejpeg($virtual_image, $dest);
+                $img_saved = imagejpeg($virtual_image, $dest, $JPEGQuality);
             case IMAGETYPE_PNG :
-                imagepng($virtual_image, $dest);
+                $img_saved = imagepng($virtual_image, $dest);
                 break;
             case IMAGETYPE_BMP :
-                imagewbmp($virtual_image, $dest);
+                $img_saved = imagewbmp($virtual_image, $dest);
                 break;
         }
+
+        return $img_saved;
     }
 
     private function imageCreateFromAny($src) {
